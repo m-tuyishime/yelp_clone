@@ -5,28 +5,29 @@ const router = express.Router();
 
 // Get all restaurants
 router.get("/", async (req, res) => {
-  const results = await db.query("select * from restaurants;");
+  const dbResults = await db.query("SELECT * FROM restaurants;");
   res.json({
     status: "success",
-    results: results.rows.length,
+    dbResults: dbResults.rows.length,
     data: {
-      restaurants: results.rows,
+      restaurants: dbResults.rows,
     },
   });
 });
 
 // Get a restaurant
 router.get("/:id", async (req, res) => {
-  const results = await db.query(
-    `select * from restaurants where id = ${req.params.id};`
+  const dbResults = await db.query(
+    "SELECT * FROM restaurants WHERE id = $1;",
+    [req.params.id]
   );
 
-  if (results.rows !== []) {
+  if (dbResults.rowCount !== 0) {
     res.json({
       status: "success",
-      results: results.rows.length,
+      dbResults: dbResults.rows.length,
       data: {
-        restaurants: results.rows,
+        restaurants: dbResults.rows,
       },
     });
   } else {
@@ -35,27 +36,45 @@ router.get("/:id", async (req, res) => {
 });
 
 // Create a restaurant
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
+  const dbResults = await db.query(
+    `INSERT INTO restaurants (name, location, price_range)
+      VALUES ($1, $2, $3) RETURNING *;`,
+      [req.query.name, req.query.location, req.query.price_range]
+  );
+
   res.status(201).json({
     status: "success",
     data: {
-      restaurants: ["mcies"],
+      restaurants: dbResults.rows,
     },
   });
 });
 
 // Update restaurants
-router.put("/:id", (req, res) => {
+router.put("/:id", async (req, res) => {
+  const dbResults = await db.query(
+    `UPDATE restaurants
+      SET name = $1, location = $2, price_range = $3
+      WHERE id = $4 RETURNING *;`,
+      [req.query.name, req.query.location, req.query.price_range, req.params.id]
+  );
+
   res.json({
     status: "success",
     data: {
-      restaurants: ["mcies"],
+      restaurants: dbResults.rows,
     },
   });
 });
 
 // Delete Restaurant
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
+  await db.query(
+    `DELETE FROM restaurants
+      WHERE id = $1;`,
+      [req.query.name]
+  );
   res.status(204).send();
 });
 
