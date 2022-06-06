@@ -73,7 +73,7 @@ router.delete("/:id", async (req, res) => {
   await db.query(
     `DELETE FROM restaurants
       WHERE id = $1;`,
-      [req.query.name]
+      [req.params.id]
   );
   res.status(204).send();
 });
