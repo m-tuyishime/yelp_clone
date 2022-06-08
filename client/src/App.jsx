@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { RestaurantDetails } from "./routes/RestaurantDetails";
-import { UpdateRestaurant } from "./routes/UpdateRestaurant";
+import { UpdatePage } from "./routes/UpdatePage";
 import Home from "./routes/Home";
 import { RestaurantsContextProvider } from "./context/RestaurantsContext";
 
@@ -15,13 +14,9 @@ const App = () => {
             <Route
               exact
               path="/restaurants/:id/update"
-              element={<UpdateRestaurant />}
+              element={<UpdatePage />}
             />
-            <Route
-              exact
-              path="/restaurants/:id"
-              element={<RestaurantDetails />}
-            />
+            <Route exact path="/restaurants/:id" element={<UpdatePage />} />
           </Routes>
         </Router>
       </div>

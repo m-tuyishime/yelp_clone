@@ -1,5 +1,7 @@
 import React from "react";
 
-export const RestaurantDetails = () => {
+const DetailPage = () => {
   return <div>Restaurant Details</div>;
 };
+
+export default DetailPage;

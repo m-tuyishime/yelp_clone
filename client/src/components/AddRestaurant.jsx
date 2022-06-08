@@ -6,7 +6,7 @@ const AddRestaurant = () => {
   const { addRestaurants } = useContext(RestaurantsContext);
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
-  const [priceRange, setPriceRange] = useState("Price Range");
+  const [priceRange, setPriceRange] = useState("price range");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,7 +50,7 @@ const AddRestaurant = () => {
               onChange={(e) => setPriceRange(e.target.value)}
               className="custom-select form-control"
             >
-              <option disabled>Price Range</option>
+              <option disabled>price range</option>
               <option value="1">$</option>
               <option value="2">$$</option>
               <option value="3">$$$</option>
