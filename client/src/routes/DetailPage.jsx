@@ -4,6 +4,7 @@ import RestaurantFinder from "../api/RestaurantFinder";
 import AddReview from "../components/AddReview";
 import Reviews from "../components/Reviews";
 import { RestaurantsContext } from "../context/RestaurantsContext";
+import AverageRating from "../components/AverageRating";
 
 export const DetailPage = () => {
   const { id } = useParams();
@@ -14,7 +15,7 @@ export const DetailPage = () => {
     try {
       const fetchData = async () => {
         const response = await RestaurantFinder.get(`/${id}`);
-        setSelectedRestaurant(response.data.data.restaurants[0].name);
+        setSelectedRestaurant(response.data.data.restaurants[0]);
         setReviews(response.data.data.reviews);
       };
 
@@ -28,7 +29,10 @@ export const DetailPage = () => {
     <div>
       {selectedRestaurant && reviews && (
         <>
-          <h1 className="text-center display-1">{selectedRestaurant}</h1>
+          <h1 className="text-center display-1">{selectedRestaurant.name}</h1>
+          <div className="text-center">
+            <AverageRating restaurant={selectedRestaurant} showZero={true} />
+          </div>
           <div className="mt-3">
             <Reviews reviews={reviews} />
           </div>

@@ -3,6 +3,8 @@ import RestaurantFinder from "../api/RestaurantFinder";
 import { RestaurantsContext } from "../context/RestaurantsContext";
 import { useNavigate } from "react-router-dom";
 
+import AverageRating from "./AverageRating";
+
 const RestaurantList = (props) => {
   const navigate = useNavigate();
 
@@ -67,7 +69,9 @@ const RestaurantList = (props) => {
                   <td>{restaurant.name}</td>
                   <td>{restaurant.location}</td>
                   <td>{"$".repeat(restaurant.price_range)}</td>
-                  <td>reviews</td>
+                  <td>
+                    <AverageRating restaurant={restaurant} />
+                  </td>
                   <td>
                     <button
                       onClick={(e) => handleUpdate(e, restaurant.id)}
