@@ -42,10 +42,11 @@ router.get("/:id", async (req, res) => {
 
 // Create a restaurant
 router.post("/", async (req, res) => {
+  const { name, location, price_range } = req.body;
   const dbResults = await db.query(
     `INSERT INTO restaurants (name, location, price_range)
       VALUES ($1, $2, $3) RETURNING *;`,
-    [req.body.name, req.body.location, req.body.price_range]
+    [name, location, price_range]
   );
 
   res.status(201).json({
@@ -58,11 +59,12 @@ router.post("/", async (req, res) => {
 
 // Update restaurants
 router.put("/:id", async (req, res) => {
+  const { name, location, price_range } = req.body;
   const dbResults = await db.query(
     `UPDATE restaurants
       SET name = $1, location = $2, price_range = $3
       WHERE id = $4 RETURNING *;`,
-    [req.body.name, req.body.location, req.body.price_range, req.params.id]
+    [name, location, price_range, req.params.id]
   );
 
   res.json({
@@ -81,6 +83,22 @@ router.delete("/:id", async (req, res) => {
     [req.params.id]
   );
   res.status(204).send();
+});
+
+router.post("/:id/addReview", async (req, res) => {
+  const { name, review, rating } = req.body;
+  const dbResults = await db.query(
+    `INSERT INTO reviews (restaurant_id, name, review, rating)
+      VALUES ($1, $2, $3, $4)
+      RETURNING *;`,
+    [req.params.id, name, review, rating]
+  );
+  res.status(201).json({
+    status: "success",
+    data: {
+      review: dbResults.rows,
+    },
+  });
 });
 
 module.exports = router;
