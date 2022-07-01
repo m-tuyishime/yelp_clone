@@ -7,33 +7,32 @@ import { RestaurantsContext } from "../context/RestaurantsContext";
 
 export const DetailPage = () => {
   const { id } = useParams();
-  const { selectedRestaurant, setSelectedRestaurant } =
+  const { selectedRestaurant, setSelectedRestaurant, reviews, setReviews } =
     useContext(RestaurantsContext);
 
   useEffect(() => {
     try {
       const fetchData = async () => {
         const response = await RestaurantFinder.get(`/${id}`);
-        setSelectedRestaurant(response.data.data);
+        setSelectedRestaurant(response.data.data.restaurants[0].name);
+        setReviews(response.data.data.reviews);
       };
 
       fetchData();
     } catch (error) {
       console.error(error);
     }
-  }, []);
+  }, [selectedRestaurant, reviews]);
 
   return (
     <div>
-      {selectedRestaurant && (
+      {selectedRestaurant && reviews && (
         <>
-          <h1 className="text-center display-1">
-            {selectedRestaurant.restaurants[0].name}
-          </h1>
+          <h1 className="text-center display-1">{selectedRestaurant}</h1>
           <div className="mt-3">
-            <Reviews reviews={selectedRestaurant.reviews} />
+            <Reviews reviews={reviews} />
           </div>
-          <AddReview />
+          <AddReview setReviews={setReviews} />
         </>
       )}
     </div>
