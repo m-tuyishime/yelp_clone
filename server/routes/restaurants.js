@@ -16,16 +16,23 @@ router.get("/", async (req, res) => {
 
 // Get a restaurant
 router.get("/:id", async (req, res) => {
-  const dbResults = await db.query("SELECT * FROM restaurants WHERE id = $1;", [
-    req.params.id,
-  ]);
+  const restaurants = await db.query(
+    "SELECT * FROM restaurants WHERE id = $1;",
+    [req.params.id]
+  );
 
-  if (dbResults.rowCount !== 0) {
+  const reviews = await db.query(
+    "SELECT * FROM reviews WHERE restaurant_id = $1;",
+    [req.params.id]
+  );
+
+  if (restaurants.rowCount !== 0) {
     res.json({
       status: "success",
-      dbResults: dbResults.rows.length,
+      dbResults: restaurants.rows.length,
       data: {
-        restaurants: dbResults.rows,
+        restaurants: restaurants.rows,
+        reviews: reviews.rows,
       },
     });
   } else {
